@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Book List</title>
+    
+</head>
+<body>
+    <h1>BookVerse</h1>
+    <div id="book-list"></div>
+    <script src="script.js">
+        document.getElementById('bookResellForm').addEventListener('submit', async function (e) {
+    e.preventDefault();
+
+    const formData = new FormData();
+    formData.append('title', document.getElementById('bookTitle').value);
+    formData.append('author', document.getElementById('bookAuthor').value);
+    formData.append('genre', document.getElementById('bookGenre').value);
+    formData.append('condition', document.getElementById('bookCondition').value);
+    formData.append('description', document.getElementById('bookDescription').value);
+    formData.append('price', document.getElementById('bookPrice').value);
+    formData.append('contactPhone', document.getElementById('contactPhone').value);
+
+    // Append images
+    const files = document.getElementById('bookImages').files;
+    for (let i = 0; i < files.length; i++) {
+        formData.append('images', files[i]);
+    }
+
+    try {
+        const response = await fetch('http://localhost:5000/api/books', {
+            method: 'POST',
+            body: formData
+        });
+
+        const data = await response.json();
+        if (response.ok) {
+            alert('Book listed successfully!');
+            this.reset();
+            document.getElementById('imagePreview').innerHTML = '';
+        } else {
+            alert(data.error || 'Something went wrong!');
+        }
+    } catch (error) {
+        console.error('Error:', error);
+        alert('Error listing the book');
+    }
+});
+
+    </script>
+</body>
+</html>
